@@ -1,0 +1,12 @@
+import { Router } from 'express';
+import { listScholarships, getScholarship, createScholarship, updateScholarship, deleteScholarship } from '../controllers/scholarshipController.js';
+import { requireAuth, requireAdmin } from '../middleware/auth.js';
+import { asyncHandler } from '../utils/asyncHandler.js';
+const router = Router();
+router.use(requireAuth);
+router.get('/', asyncHandler(listScholarships));
+router.post('/', requireAdmin, asyncHandler(createScholarship));
+router.get('/:id', asyncHandler(getScholarship));
+router.patch('/:id', requireAdmin, asyncHandler(updateScholarship));
+router.delete('/:id', requireAdmin, asyncHandler(deleteScholarship));
+export default router;

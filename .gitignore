@@ -1,0 +1,20 @@
+node_modules/
+**/node_modules/
+.env
+.env.*
+!.env.example
+coverage/
+dist/
+.vite/
+*.log
+.DS_Store
+.tmp/
+.tmp-uploads/
+*.zip
+
+# Deployment tooling
+.vercel/
+client/.vercel/
+*.local
+npm-debug.log*
+yarn-debug.log*

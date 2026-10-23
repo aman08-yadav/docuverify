@@ -1,0 +1,24 @@
+# DocuVerify implementation checklist
+
+- [x] React/Vite frontend and Express/Mongoose backend scaffolding
+- [x] Account registration/login/logout/profile and HTTP-only JWT cookie
+- [x] CSRF token validation and strict origin CORS
+- [x] Server-enforced student/admin guards
+- [x] GridFS storage with upload signature/size checks
+- [x] Image OCR, selectable-text PDF parsing, scanned-PDF page rendering/OCR
+- [x] Classification with evidence and documented rule score
+- [x] Evidence-linked extraction and explicit confidence unavailable state
+- [x] Cross-document consistency checks and normalized name matching
+- [x] Configurable scholarship rules and explainable assessment records
+- [x] Student dashboard, document details, assessments, printable report
+- [x] Admin overview, user search, document reviews, scholarship management, audit view
+- [x] Synthetic OCR fixtures
+- [x] Core logic tests
+- [x] API/security tests authored (require npm dependencies)
+- [x] Frontend utility tests authored (require npm dependencies)
+- [x] Vercel/Render configuration, environment examples, README, CI
+- [x] Queue startup-recovery handling and detail-page status polling
+- [ ] Dependency installation and full client production build (environment registry access must be available)
+- [ ] Full server API/security test suite (requires installed packages)
+- [ ] MongoDB/GridFS integration workflow (requires reachable test MongoDB URI)
+- [ ] Public deployment (requires the developer's hosting accounts and credentials)

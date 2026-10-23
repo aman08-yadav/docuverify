@@ -1,0 +1,35 @@
+{
+  "name": "docuverify",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Evidence-based OCR document review and scholarship eligibility platform",
+  "workspaces": [
+    "client",
+    "server"
+  ],
+  "scripts": {
+    "dev": "concurrently -k \"npm:dev:server\" \"npm:dev:client\"",
+    "dev:client": "npm --workspace client run dev",
+    "dev:server": "npm --workspace server run dev",
+    "build": "npm --workspace client run build",
+    "test": "npm --workspace server test && npm --workspace client test",
+    "test:server": "npm --workspace server test",
+    "lint": "npm --workspace server run lint && npm --workspace client run lint",
+    "seed": "npm --workspace server run seed",
+    "create-admin": "npm --workspace server run create-admin",
+    "test:core": "node --test server/src/tests/core.test.js",
+    "check:server": "find server/src server/scripts -name \"*.js\" -print0 | xargs -0 -n1 node --check",
+    "start": "npm --workspace server run start"
+  },
+  "devDependencies": {
+    "concurrently": "^9.1.2",
+    "eslint": "^9.17.0",
+    "@eslint/js": "^9.17.0",
+    "globals": "^15.14.0",
+    "eslint-plugin-react-hooks": "^5.1.0"
+  },
+  "engines": {
+    "node": ">=22.12.0",
+    "npm": ">=10.0.0"
+  }
+}

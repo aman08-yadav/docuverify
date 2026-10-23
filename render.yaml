@@ -1,0 +1,27 @@
+services:
+  - type: web
+    name: docuverify-api
+    runtime: node
+    plan: free
+    rootDir: .
+    buildCommand: npm install
+    startCommand: npm --workspace server run start
+    healthCheckPath: /api/health
+    autoDeploy: true
+    envVars:
+      - key: NODE_VERSION
+        value: 24.22.0
+      - key: NODE_ENV
+        value: production
+      - key: MONGODB_URI
+        sync: false
+      - key: JWT_SECRET
+        generateValue: true
+      - key: CLIENT_ORIGIN
+        sync: false
+      - key: MAX_UPLOAD_MB
+        value: 10
+      - key: MAX_PDF_PAGES
+        value: 8
+      - key: OCR_CONCURRENCY
+        value: 1

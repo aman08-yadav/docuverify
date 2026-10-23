@@ -1,0 +1,12 @@
+import { Router } from 'express';
+import { overview, listUsers, listAudit } from '../controllers/adminController.js';
+import { listDocuments } from '../controllers/documentController.js';
+import { listAssessments } from '../controllers/assessmentController.js';
+import { requireAuth, requireAdmin } from '../middleware/auth.js';
+import { asyncHandler } from '../utils/asyncHandler.js';
+const router = Router(); router.use(requireAuth, requireAdmin);
+router.get('/overview', asyncHandler(overview)); router.get('/users', asyncHandler(listUsers));
+router.get('/documents', (req, res, next) => { req.isAdminAll = true; next(); }, asyncHandler(listDocuments));
+router.get('/assessments', (req, res, next) => { req.isAdminAll = true; next(); }, asyncHandler(listAssessments));
+router.get('/audit', asyncHandler(listAudit));
+export default router;
