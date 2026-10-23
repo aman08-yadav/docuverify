@@ -11,7 +11,7 @@ const scholarshipSchema = new mongoose.Schema({
   startsAt: { type: Date, default: null },
   endsAt: { type: Date, default: null },
   isActive: { type: Boolean, default: true, index: true },
-  isDemo: { type: Boolean, default: true },
+  isDemo: { type: Boolean, default: false },
   createdBy: { type: mongoose.Schema.Types.ObjectId, ref: 'User', default: null }
 }, { timestamps: true, versionKey: false });
 export default mongoose.model('Scholarship', scholarshipSchema);

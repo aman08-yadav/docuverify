@@ -1,9 +1,42 @@
 const RULES = [
-  { type: 'marksheet', terms: ['marksheet', 'mark sheet', 'statement of marks', 'grade sheet', 'cgpa', 'semester', 'total marks', 'percentage', 'university examination'] },
-  { type: 'income_certificate', terms: ['income certificate', 'annual income', 'family income', 'tehsildar', 'income from all sources'] },
-  { type: 'domicile_certificate', terms: ['domicile certificate', 'resident certificate', 'permanent resident', 'proof of residence'] },
-  { type: 'caste_certificate', terms: ['caste certificate', 'scheduled caste', 'scheduled tribe', 'other backward class', 'community certificate'] },
-  { type: 'identity', terms: ['identity card', 'date of birth', 'aadhaar', 'passport', 'driving licence', 'driving license', 'identity number'] }
+  {
+    type: 'marksheet',
+    terms: [
+      'marksheet', 'mark sheet', 'statement of marks', 'grade sheet', 'grade card', 'cgpa', 'sgpa',
+      'semester', 'total marks', 'percentage', 'university examination', 'board of secondary',
+      'higher secondary', 'intermediate examination', 'secondary school', 'cbse', 'icse',
+      'marks obtained', 'maximum marks', 'result: pass', 'provisional certificate', 'academic transcript'
+    ]
+  },
+  {
+    type: 'income_certificate',
+    terms: [
+      'income certificate', 'annual income', 'family income', 'tehsildar', 'tahsildar',
+      'income from all sources', 'revenue department', 'sub-divisional magistrate', 'sdm',
+      'gross annual income', 'competent authority'
+    ]
+  },
+  {
+    type: 'domicile_certificate',
+    terms: [
+      'domicile certificate', 'resident certificate', 'permanent resident', 'proof of residence',
+      'certificate of domicile', 'bonafide resident', 'state resident'
+    ]
+  },
+  {
+    type: 'caste_certificate',
+    terms: [
+      'caste certificate', 'scheduled caste', 'scheduled tribe', 'other backward class',
+      'community certificate', 'social welfare department', 'ews certificate'
+    ]
+  },
+  {
+    type: 'identity',
+    terms: [
+      'identity card', 'date of birth', 'aadhaar', 'passport', 'driving licence', 'driving license',
+      'identity number', 'unique identification', 'voter id', 'election commission', 'pan card'
+    ]
+  }
 ];
 export function classifyDocument(text = '') {
   const normalized = String(text).toLowerCase().replace(/\s+/g, ' ');
