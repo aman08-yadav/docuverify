@@ -13,13 +13,14 @@ export function assessEligibility(scholarship, documents, now = new Date()) {
   ];
   const criteria = scholarship.criteria || {};
   const processed = documents.filter((doc) => ['processed', 'needs_review'].includes(doc.status));
-  const types = new Set(processed.map((doc) => doc.predictedType !== 'unknown' ? doc.predictedType : doc.declaredType));
+  const getDocType = (doc) => doc.predictedType && doc.predictedType !== 'unknown' ? doc.predictedType : doc.declaredType;
+  const types = new Set(processed.map(getDocType));
   for (const type of criteria.requiredDocumentTypes || []) {
     const hasType = types.has(type);
     if (!hasType) missingDocuments.push(DOC_LABELS[type] || type);
-    criteriaResults.push({ key: `document:${type}`, criterion: `Required document: ${DOC_LABELS[type] || type}`, expected: 'At least one uploaded and processed document', actual: hasType ? 'Provided' : 'Missing', result: hasType ? 'pass' : 'review', explanation: hasType ? 'A document of this type is available.' : 'The required document is missing; eligibility cannot be assumed.', evidence: processed.filter((doc) => types.has(type)).map((doc) => doc.originalName) });
+    criteriaResults.push({ key: `document:${type}`, criterion: `Required document: ${DOC_LABELS[type] || type}`, expected: 'At least one uploaded and processed document', actual: hasType ? 'Provided' : 'Missing', result: hasType ? 'pass' : 'review', explanation: hasType ? 'A document of this type is available.' : 'The required document is missing; eligibility cannot be assumed.', evidence: processed.filter((doc) => getDocType(doc) === type).map((doc) => doc.originalName) });
   }
-  const academic = activeField(processed.filter((doc) => types.has('marksheet')), ['percentage', 'cgpa']);
+  const academic = activeField(processed.filter((doc) => getDocType(doc) === 'marksheet'), ['percentage', 'cgpa']);
   if (Number.isFinite(criteria.minAcademicScore)) {
     if (!academic) {
       criteriaResults.push({ key: 'minAcademicScore', criterion: 'Minimum academic score', expected: `At least ${criteria.minAcademicScore}%`, actual: null, result: 'review', explanation: 'No readable percentage/score field was found in a marksheet.', evidence: [] });
@@ -35,7 +36,7 @@ export function assessEligibility(scholarship, documents, now = new Date()) {
       criteriaResults.push({ key: 'minAcademicScore', criterion: 'Minimum academic score', expected: `At least ${criteria.minAcademicScore}%`, actual: `${value}%`, result: scorePass ? 'pass' : 'fail', explanation: scorePass ? 'The extracted percentage meets the configured threshold.' : 'The extracted percentage is below the configured threshold.', evidence: proof(academic) });
     }
   }
-  const income = activeField(processed.filter((doc) => types.has('income_certificate')), ['annualIncome']);
+  const income = activeField(processed.filter((doc) => getDocType(doc) === 'income_certificate'), ['annualIncome']);
   if (Number.isFinite(criteria.maxAnnualIncome)) {
     if (!income) {
       criteriaResults.push({ key: 'maxAnnualIncome', criterion: 'Maximum annual family income', expected: `At most ₹${criteria.maxAnnualIncome.toLocaleString('en-IN')}`, actual: null, result: 'review', explanation: 'No readable annual-income field was found in an income certificate.', evidence: [] });

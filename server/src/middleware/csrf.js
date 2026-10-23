@@ -18,3 +18,4 @@ export function csrfProtection(req, res, next) {
   next();
 }
 export const sessionCookieOptions = () => cookieOptions(true);
+export const csrfCookieOptions = () => cookieOptions(false);

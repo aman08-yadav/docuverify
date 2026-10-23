@@ -6,7 +6,6 @@ const userSchema = new mongoose.Schema({
   passwordHash: { type: String, required: true, select: false },
   role: { type: String, enum: ['student', 'admin'], default: 'student' },
   institution: { type: String, trim: true, maxlength: 160, default: '' },
-  createdAt: { type: Date, default: Date.now },
   lastLoginAt: { type: Date, default: null },
   disabledAt: { type: Date, default: null }
 }, { timestamps: true, versionKey: false });

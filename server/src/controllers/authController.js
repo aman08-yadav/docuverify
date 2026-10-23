@@ -2,7 +2,7 @@ import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
 import User from '../models/User.js';
 import { config } from '../config/env.js';
-import { sessionCookieOptions } from '../middleware/csrf.js';
+import { sessionCookieOptions, csrfCookieOptions } from '../middleware/csrf.js';
 import AppError from '../utils/AppError.js';
 import { audit } from '../utils/audit.js';
 import { ok } from '../utils/respond.js';
@@ -31,7 +31,8 @@ export async function login(req, res) {
 }
 export async function logout(req, res) {
   res.clearCookie('dv_session', { ...sessionCookieOptions(), maxAge: undefined });
-  await audit(req, 'auth.logout', 'User', req.user?._id || '');
+  res.clearCookie('dv_csrf', { ...csrfCookieOptions(), maxAge: undefined });
+  if (req.user?._id) await audit(req, 'auth.logout', 'User', req.user._id);
   return ok(res, {}, 200, 'You are signed out.');
 }
 export async function me(req, res) { return ok(res, { user: req.user.toSafeJSON() }); }

@@ -1,6 +1,6 @@
 import { Router } from 'express';
 import { register, login, logout, me, updateProfile } from '../controllers/authController.js';
-import { requireAuth } from '../middleware/auth.js';
+import { requireAuth, optionalAuth } from '../middleware/auth.js';
 import { getCsrfToken } from '../middleware/csrf.js';
 import { asyncHandler } from '../utils/asyncHandler.js';
 import { validateBody } from '../middleware/validate.js';
@@ -9,7 +9,7 @@ const router = Router();
 router.get('/csrf', getCsrfToken);
 router.post('/register', validateBody(registerSchema), asyncHandler(register));
 router.post('/login', validateBody(loginSchema), asyncHandler(login));
-router.post('/logout', requireAuth, asyncHandler(logout));
+router.post('/logout', optionalAuth, asyncHandler(logout));
 router.get('/me', requireAuth, asyncHandler(me));
 router.patch('/profile', requireAuth, validateBody(profileSchema), asyncHandler(updateProfile));
 export default router;

@@ -7,4 +7,5 @@ router.use(requireAuth);
 router.get('/', asyncHandler(listAssessments));
 router.post('/:scholarshipId', asyncHandler(createAssessment));
 router.get('/detail/:id', asyncHandler(getAssessment));
+router.get('/:id', asyncHandler(getAssessment));
 export default router;

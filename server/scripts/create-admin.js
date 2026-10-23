@@ -10,6 +10,6 @@ if (password.length < 16 || !/[A-Za-z]/.test(password) || !/\d/.test(password)) 
 try {
   await connectDatabase();
   const passwordHash = await bcrypt.hash(password, 12);
-  const user = await User.findOneAndUpdate({ email }, { $set: { name, email, passwordHash, role: 'admin', disabledAt: null } }, { upsert: true, new: true, runValidators: true, setDefaultsOnInsert: true });
+  const user = await User.findOneAndUpdate({ email }, { $set: { name, email, passwordHash, role: 'admin', disabledAt: null } }, { upsert: true, returnDocument: 'after', runValidators: true, setDefaultsOnInsert: true });
   console.log(`Administrator account prepared for ${user.email}. No password was printed.`);
 } finally { const mongoose = await import('mongoose'); await mongoose.default.disconnect(); }

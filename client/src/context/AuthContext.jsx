@@ -1,5 +1,5 @@
 import { createContext, useCallback, useContext, useEffect, useMemo, useState } from 'react';
-import api, { getApiError } from '../services/api.js';
+import api, { getApiError, resetCsrfToken } from '../services/api.js';
 const AuthContext = createContext(null);
 export function AuthProvider({ children }) {
   const [user, setUser] = useState(null);
@@ -11,9 +11,9 @@ export function AuthProvider({ children }) {
     finally { setLoading(false); }
   }, []);
   useEffect(() => { refreshUser(); }, [refreshUser]);
-  const login = async (values) => { const result = await api.post('/auth/login', values); setUser(result.data.user); setAuthError(''); return result.data.user; };
-  const register = async (values) => { const result = await api.post('/auth/register', values); setUser(result.data.user); setAuthError(''); return result.data.user; };
-  const logout = async () => { try { await api.post('/auth/logout'); } finally { setUser(null); } };
+  const login = async (values) => { resetCsrfToken(); const result = await api.post('/auth/login', values); setUser(result.data.user); setAuthError(''); return result.data.user; };
+  const register = async (values) => { resetCsrfToken(); const result = await api.post('/auth/register', values); setUser(result.data.user); setAuthError(''); return result.data.user; };
+  const logout = async () => { try { await api.post('/auth/logout'); } finally { setUser(null); resetCsrfToken(); } };
   const value = useMemo(() => ({ user, loading, authError, login, register, logout, refreshUser }), [user, loading, authError, refreshUser]);
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 }

@@ -2,6 +2,7 @@
   "name": "docuverify",
   "version": "1.0.0",
   "private": true,
+  "type": "module",
   "description": "Evidence-based OCR document review and scholarship eligibility platform",
   "workspaces": [
     "client",

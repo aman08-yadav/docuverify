@@ -9,7 +9,7 @@ const resultIcon = { pass: CheckCircle2, fail: XCircle, review: CircleAlert, not
 const titleCase = (value = '') => String(value).replaceAll('_', ' ').replace(/\b\w/g, (c) => c.toUpperCase());
 export default function AssessmentDetail() {
   const { id } = useParams(); const [item, setItem] = useState(null); const [loading, setLoading] = useState(true); const [error, setError] = useState('');
-  useEffect(() => { let alive = true; api.get(`/assessments/detail/${id}`).then((result) => { if (alive) setItem(result.data.assessment); }).catch((err) => { if (alive) setError(getApiError(err)); }).finally(() => { if (alive) setLoading(false); }); return () => { alive = false; }; }, [id]);
+  useEffect(() => { let alive = true; api.get(`/assessments/${id}`).then((result) => { if (alive) setItem(result.data.assessment); }).catch((err) => { if (alive) setError(getApiError(err)); }).finally(() => { if (alive) setLoading(false); }); return () => { alive = false; }; }, [id]);
   if (loading) return <Loading label="Preparing assessment report…" />;
   if (!item) return <div className="page-stack"><Link to="/app/assessments" className="back-link"><ArrowLeft size={15} /> Assessment history</Link><div className="panel"><EmptyState title="Assessment not available" message={error || 'This report may have been removed, or you may not have access.'} /></div></div>;
   const snapshot = item.scholarshipSnapshot || {}; const criteria = item.criteriaResults || [];

@@ -18,3 +18,5 @@ client/.vercel/
 *.local
 npm-debug.log*
 yarn-debug.log*
+
+.vercel

@@ -44,7 +44,12 @@ export async function listDocuments(req, res) {
   const limit = Math.max(1, Math.min(50, Number.parseInt(req.query.limit, 10) || 10));
   const filter = req.user.role === 'admin' && (req.isAdminAll === true || req.query.all === 'true') ? {} : { owner: req.user._id };
   if (req.query.status && ['uploaded', 'queued', 'processing', 'processed', 'needs_review', 'failed'].includes(req.query.status)) filter.status = req.query.status;
-  if (req.query.type && ['marksheet', 'identity', 'income_certificate', 'domicile_certificate', 'caste_certificate', 'other'].includes(req.query.type)) filter.declaredType = req.query.type;
+  if (req.query.type && ['marksheet', 'identity', 'income_certificate', 'domicile_certificate', 'caste_certificate', 'other'].includes(req.query.type)) {
+    filter.$or = [
+      { predictedType: req.query.type },
+      { declaredType: req.query.type, predictedType: { $in: ['unknown', null] } }
+    ];
+  }
   if (req.query.search) filter.originalName = { $regex: String(req.query.search).slice(0, 100).replace(/[.*+?^${}()|[\]\\]/g, '\\$&'), $options: 'i' };
   const [documents, total] = await Promise.all([Document.find(filter).select('-extractedText').populate('owner', 'name email').sort({ createdAt: -1 }).skip((page - 1) * limit).limit(limit).lean(), Document.countDocuments(filter)]);
   return ok(res, { documents, pagination: { page, limit, total, pages: Math.ceil(total / limit) } });
@@ -97,7 +102,9 @@ export async function deleteDocument(req, res) {
 export async function consistency(req, res) {
   const documents = await Document.find({ owner: req.user._id, status: { $in: ['processed', 'needs_review'] } }).select('originalName sha256 fields status declaredType predictedType createdAt').lean();
   const checks = buildConsistencyChecks(documents);
-  await Document.bulkWrite(documents.map((doc) => ({ updateOne: { filter: { _id: doc._id }, update: { $set: { consistencyChecks: checks.filter((check) => check.evidence.includes(doc.originalName)) } } } })), { ordered: false }).catch(() => {});
+  if (documents.length > 0) {
+    await Document.bulkWrite(documents.map((doc) => ({ updateOne: { filter: { _id: doc._id }, update: { $set: { consistencyChecks: checks.filter((check) => check.evidence.includes(doc.originalName)) } } } })), { ordered: false }).catch(() => {});
+  }
   return ok(res, { checks, documentsCompared: documents.length });
 }
 export const deleteDocAsync = asyncHandler(deleteDocument);

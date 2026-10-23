@@ -35,12 +35,12 @@ export async function createScholarship(req, res) {
 export async function updateScholarship(req, res) {
   const scholarship = await Scholarship.findById(req.params.id);
   if (!scholarship) throw new AppError(404, 'Scholarship not found.');
-  Object.assign(scholarship, validateScholarship({ ...scholarship.toObject(), ...req.body, criteria: { ...scholarship.criteria.toObject(), ...(req.body.criteria || {}) } }));
+  Object.assign(scholarship, validateScholarship({ ...scholarship.toObject(), ...req.body, criteria: { ...(scholarship.criteria?.toObject?.() || scholarship.criteria || {}), ...(req.body.criteria || {}) } }));
   await scholarship.save(); await audit(req, 'scholarship.updated', 'Scholarship', scholarship._id);
   return ok(res, { scholarship }, 200, 'Scholarship updated.');
 }
 export async function deleteScholarship(req, res) {
-  const scholarship = await Scholarship.findByIdAndUpdate(req.params.id, { $set: { isActive: false } }, { new: true });
+  const scholarship = await Scholarship.findByIdAndUpdate(req.params.id, { $set: { isActive: false } }, { returnDocument: 'after' });
   if (!scholarship) throw new AppError(404, 'Scholarship not found.');
   await audit(req, 'scholarship.deactivated', 'Scholarship', scholarship._id);
   return ok(res, { scholarship }, 200, 'Scholarship deactivated. Assessment history remains available.');

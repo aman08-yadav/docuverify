@@ -21,7 +21,7 @@ export function openReadStream(id) {
 }
 export async function removeStoredFile(id) {
   try { await getBucket().delete(new ObjectId(String(id))); }
-  catch (error) { if (error.code !== 'ENOENT') throw error; }
+  catch (error) { if (error.code !== 'ENOENT' && !error.message?.includes('FileNotFound')) throw error; }
 }
 export async function readStoredFile(id, maxBytes) {
   return new Promise((resolve, reject) => {
